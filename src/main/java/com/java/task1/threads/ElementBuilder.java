@@ -1,6 +1,6 @@
 package com.java.task1.threads;
 
-import com.java.task1.utils.SleepTimeGenerator;
+import com.java.utils.SysUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -20,7 +20,7 @@ public class ElementBuilder implements Runnable {
     public void run() {
         LOG.info("Started: {}", threadName);
         try {
-            SleepTimeGenerator.sleepRandom(1, 10);
+            SysUtil.sleepRandom(1, 10);
             if (prevThread != null) {
                 prevThread.join();
             }
