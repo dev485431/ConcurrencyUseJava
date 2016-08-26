@@ -4,15 +4,18 @@ import com.java.task2.atomic.counters.Counter;
 
 public class Task implements Runnable {
 
-    private Counter atomicCounter;
+    public static final int INCREMENTS_COUNT = 1000;
+    private Counter counter;
 
-    public Task(Counter atomicCounter) {
-        this.atomicCounter = atomicCounter;
+    public Task(Counter counter) {
+        this.counter = counter;
     }
 
     @Override
     public void run() {
-        atomicCounter.increment();
+        for (int i = 0; i < INCREMENTS_COUNT; i++) {
+            counter.increment();
+        }
     }
 
 }

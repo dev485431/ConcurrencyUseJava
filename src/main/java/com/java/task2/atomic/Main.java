@@ -1,37 +1,47 @@
 package com.java.task2.atomic;
 
-import com.java.task2.atomic.counters.Counter;
-import com.java.task2.atomic.counters.UnsafeCounter;
-import com.java.utils.SysUtil;
+import com.java.task2.atomic.counters.*;
+
+import static com.java.task2.atomic.Task.INCREMENTS_COUNT;
 
 public class Main {
 
-    private static final int INCREMENT_COUNT = 9000;
-    private static long startTime;
-    private static long endTime;
+    private static final int INCREMENTORS_COUNT = 9000;
 
     public static void main(String[] args) {
-        startTime = System.currentTimeMillis();
-        testUnsafe();
-        endTime = System.currentTimeMillis();
-        System.out.println("testUnsafe = " + (endTime - startTime) + " milliseconds");
+        testCounter(new UnsafeCounter(), "Unsafe Counter");
+        testCounter(new VolatileCounter(), "Volatile Counter");
+        testCounter(new AtomicCounter(), "Atomic Counter");
+        testCounter(new SynchronizedBlockCounter(), "Synchronized Block Counter");
+        testCounter(new SynchronizedMethodCounter(), "Synchronized Method Counter");
     }
 
+    private static void testCounter(Counter counter, String counterName) {
+        Thread thread[] = new Thread[INCREMENTORS_COUNT];
 
-    private static void testUnsafe() {
-        Counter unsafeCounter = new UnsafeCounter();
-        Thread thread[] = new Thread[INCREMENT_COUNT];
+        long startTime = System.currentTimeMillis();
 
-        for (int i = 0; i < INCREMENT_COUNT; i++) {
-            thread[i] = new Thread(new Task(unsafeCounter), "Thread " + i);
+        for (int i = 0; i < INCREMENTORS_COUNT; i++) {
+            thread[i] = new Thread(new Task(counter), "Thread " + i);
         }
 
-        for (int i = 0; i < INCREMENT_COUNT; i++) {
+        for (int i = 0; i < INCREMENTORS_COUNT; i++) {
             thread[i].start();
         }
 
-        SysUtil.sleep(5);
-        System.out.println("Expected = " + INCREMENT_COUNT + " Actual UnsafeCounter = " + unsafeCounter.getValue());
+        for (int i = 0; i < INCREMENTORS_COUNT; i++) {
+            try {
+                thread[i].join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        long endTime = System.currentTimeMillis();
+
+        System.out.println("Counter: " + counterName);
+        System.out.println("Expected = " + INCREMENTORS_COUNT * INCREMENTS_COUNT + " Actual = " + counter.getValue());
+        System.out.println("TestTime = " + (endTime - startTime) + " milliseconds\n");
     }
 
 }
