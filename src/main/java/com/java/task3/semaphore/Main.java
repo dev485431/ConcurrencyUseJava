@@ -1,7 +1,11 @@
 package com.java.task3.semaphore;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public class Main {
 
+    private static final Logger LOG = LogManager.getLogger(Main.class);
     private static final int COUNT = 50;
     private static final int AT_THE_SAME_TIME_COUNT = 5;
 
@@ -18,5 +22,14 @@ public class Main {
             thread[i].start();
         }
 
+        for (int i = 0; i < COUNT; i++) {
+            try {
+                thread[i].join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        LOG.info("Printing finished");
     }
 }

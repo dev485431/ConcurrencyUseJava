@@ -1,11 +1,12 @@
 package com.java.task3.semaphore;
 
-import com.java.utils.SysUtil;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class Job implements Runnable {
 
+    private static final Logger LOG = LogManager.getLogger(Job.class);
     private PrintQueue printQueue;
-
 
     public Job(PrintQueue printQueue) {
         this.printQueue = printQueue;
@@ -13,11 +14,8 @@ public class Job implements Runnable {
 
     @Override
     public void run() {
-        SysUtil.sleepRandom(2,5);
-        System.out.printf("%s: Going to print a job\n",Thread.currentThread().getName());
+        LOG.info("Going to print: {}\n", Thread.currentThread().getName());
         printQueue.printJob();
     }
-
-
 
 }
