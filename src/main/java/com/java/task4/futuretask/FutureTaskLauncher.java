@@ -11,10 +11,11 @@ import java.util.concurrent.Future;
 public class FutureTaskLauncher {
 
     private static final Logger LOG = LogManager.getLogger(FutureTaskLauncher.class);
+    private static final int POOL_SIZE = 5;
     private static final int SPACECRAFT_SIZE = 20;
 
     public static void main(String[] args) {
-        ExecutorService executor = Executors.newFixedThreadPool(5);
+        ExecutorService executor = Executors.newFixedThreadPool(POOL_SIZE);
         Future[] futures = new Future[SPACECRAFT_SIZE];
 
         try {
