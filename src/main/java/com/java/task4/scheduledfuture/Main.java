@@ -15,13 +15,13 @@ public class Main {
         System.out.println("Current time is " + new Date() + ". A spaceship will start in " + DELAY + " seconds");
         try {
             ScheduledFuture<String> future = executor.schedule(new Task(), DELAY, TimeUnit.SECONDS);
-            System.out.println("The launch date returned by the task: " + future.get());
+            System.out.println("The completion date returned by the task: " + future.get());
             SysUtil.sleep(15);
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         } finally {
-            System.out.println("The program finished on: " + new Date());
             executor.shutdown();
+            System.out.println("Executor shutdown on: " + new Date());
         }
     }
 
