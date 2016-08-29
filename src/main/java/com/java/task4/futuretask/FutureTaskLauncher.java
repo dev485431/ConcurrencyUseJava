@@ -27,9 +27,7 @@ public class FutureTaskLauncher {
                 LOG.info(futures[i].get());
             }
             LOG.info("All spacecrafts prepared and launched!");
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         } finally {
             executor.shutdown();
