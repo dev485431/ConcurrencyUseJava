@@ -6,10 +6,17 @@ import java.util.concurrent.Callable;
 
 public class SpaceCraft implements Callable<String> {
 
+    private String name;
+
+    public SpaceCraft(String name) {
+        this.name = name;
+    }
+
     @Override
     public String call() {
+        long start = System.currentTimeMillis();
         SysUtil.sleepRandom(2, 5);
-        return Thread.currentThread().getName() + " has prepared";
+        return name + " has been prepared in " + (System.currentTimeMillis() - start + " milliseconds");
     }
 
 }
