@@ -3,6 +3,8 @@ package com.java.task3.cyclicbarrier;
 
 import com.java.utils.SysUtil;
 
+import java.util.concurrent.BrokenBarrierException;
+
 public class Printer implements Runnable {
 
     private String name;
@@ -16,7 +18,11 @@ public class Printer implements Runnable {
     public void run() {
         while (true) {
             SysUtil.sleepRandom(2, 9);
-            printQueue.recharge(name);
+            try {
+                printQueue.recharge(name);
+            } catch (InterruptedException | BrokenBarrierException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

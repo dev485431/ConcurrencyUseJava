@@ -2,7 +2,7 @@ package com.java.task3.cyclicbarrier;
 
 public class Main {
 
-    private static final int COUNT = 3;
+    private static final int COUNT = 5;
     private static final int COUNT_THREADS = 50;
 
     public static void main(String args[]) {
