@@ -6,42 +6,43 @@ import java.util.concurrent.RecursiveTask;
 
 public class MaximumFinder extends RecursiveTask<Integer> {
 
-    private static final int PARALLELISM = 4;
-    private static final int THRESHOLD = 10000;
+    private static final int[] PARALLELISM = {4, 40, 80, 160};
+    private static final int THRESHOLD = 10_000;
+    private static final int DATA_SIZE = 100_000_000;
+    private static final int RANDOM_MAX = 88_800_000;
 
-    private int firstIndex;
-    private int lastIndex;
+    private int first;
+    private int last;
     private int[] elements;
 
-    public MaximumFinder(int firstIndex, int lastIndex, int[] elements) {
-        this.firstIndex = firstIndex;
-        this.lastIndex = lastIndex;
+    public MaximumFinder(int first, int last, int[] elements) {
+        this.first = first;
+        this.last = last;
         this.elements = elements;
     }
 
     public static void main(String[] args) {
-        int[] data = new int[1_000_000];
-        initData(data);
-        final ForkJoinPool pool = new ForkJoinPool(PARALLELISM);
-        long start = System.currentTimeMillis();
-        int result = pool.invoke(new MaximumFinder(0, data.length, data));
-        System.out.println("Max number is " + result);
-        System.out.println("Time is " + (System.currentTimeMillis() - start) + " ms");
+        findMax();
+        for (int i = 0; i < PARALLELISM.length; i++) {
+            int[] data = new int[DATA_SIZE];
+            initData(data);
+            findMaxParallel(PARALLELISM[i], data);
+        }
     }
 
     @Override
     protected Integer compute() {
-        if (lastIndex - firstIndex < THRESHOLD) {
-            int result = elements[firstIndex];
-            for (int i = firstIndex; i < lastIndex; i++) {
+        if (last - first < THRESHOLD) {
+            int result = elements[first];
+            for (int i = first; i < last; i++) {
                 result = Math.max(result, elements[i]);
             }
             return result;
         } else {
-            int mid = (firstIndex + lastIndex) / 2;
-            MaximumFinder leftFinder = new MaximumFinder(firstIndex, mid, elements);
+            int mid = (first + last) / 2;
+            MaximumFinder leftFinder = new MaximumFinder(first, mid, elements);
             leftFinder.fork();
-            MaximumFinder rightFinder = new MaximumFinder(mid, lastIndex, elements);
+            MaximumFinder rightFinder = new MaximumFinder(mid, last, elements);
             int max2 = rightFinder.compute();
             int max1 = leftFinder.join();
             return Math.max(max1, max2);
@@ -51,7 +52,28 @@ public class MaximumFinder extends RecursiveTask<Integer> {
     private static void initData(int[] data) {
         final Random random = new Random();
         for (int i = 0; i < data.length; i++) {
-            data[i] = random.nextInt(888);
+            data[i] = random.nextInt(RANDOM_MAX);
         }
+    }
+
+    private static void findMax() {
+        int[] data = new int[DATA_SIZE];
+        initData(data);
+        long start = System.currentTimeMillis();
+        int result = data[0];
+        for (int elem : data) {
+            result = Math.max(result, elem);
+        }
+        System.out.println("Max number is " + result);
+        System.out.println("Non-parallel search time =  " + (System.currentTimeMillis() - start) + " ms");
+    }
+
+    private static void findMaxParallel(int parallelism, int[] data) {
+        final ForkJoinPool pool = new ForkJoinPool(parallelism);
+        long start = System.currentTimeMillis();
+        int result = pool.invoke(new MaximumFinder(0, data.length, data));
+        System.out.println("Max number is " + result);
+        System.out.println("Search time is for parallelism " + parallelism + " = " + (System.currentTimeMillis() -
+                start) + " ms");
     }
 }
