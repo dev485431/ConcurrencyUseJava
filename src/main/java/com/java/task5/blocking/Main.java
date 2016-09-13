@@ -5,7 +5,7 @@ import java.util.concurrent.BlockingQueue;
 
 public class Main {
 
-    public static final int CAPACITY = 50;
+    private static final int CAPACITY = 50;
 
     public static void main(String[] args) throws Exception {
         BlockingQueue<String> queue = new ArrayBlockingQueue<>(CAPACITY);

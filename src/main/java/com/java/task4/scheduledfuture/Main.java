@@ -7,8 +7,8 @@ import java.util.concurrent.*;
 
 public class Main {
 
-    public static final int DELAY = 5;
-    public static final int POOL_SIZE = 5;
+    private static final int DELAY = 5;
+    private static final int POOL_SIZE = 5;
 
     public static void main(String[] args) {
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(POOL_SIZE);

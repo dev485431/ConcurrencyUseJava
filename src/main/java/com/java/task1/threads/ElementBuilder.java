@@ -8,8 +8,8 @@ public class ElementBuilder implements Runnable {
 
     private static final Logger LOG = LogManager.getLogger(ElementBuilder.class);
 
-    protected String threadName;
-    protected Thread prevThread;
+    private String threadName;
+    private Thread prevThread;
 
     public ElementBuilder(String threadName, Thread prevThread) {
         this.threadName = threadName;

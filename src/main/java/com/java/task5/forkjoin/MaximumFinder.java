@@ -23,10 +23,10 @@ public class MaximumFinder extends RecursiveTask<Integer> {
 
     public static void main(String[] args) {
         findMax();
-        for (int i = 0; i < PARALLELISM.length; i++) {
+        for (int aParallelism : PARALLELISM) {
             int[] data = new int[DATA_SIZE];
             initData(data);
-            findMaxParallel(PARALLELISM[i], data);
+            findMaxParallel(aParallelism, data);
         }
     }
 
